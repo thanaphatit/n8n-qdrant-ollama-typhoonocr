@@ -2,15 +2,13 @@ FROM n8nio/n8n:latest
 
 USER root
 
-# อัพเดท repo และติดตั้งแพ็กเกจที่จำเป็น
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# ติดตั้ง dependencies ด้วย apk (Alpine package manager)
+RUN apk add --no-cache \
       python3 \
-      python3-pip \
+      py3-pip \
       poppler-utils \
       curl \
-      git \
-    && rm -rf /var/lib/apt/lists/*
+      git
 
 # สร้าง virtual environment และติดตั้ง typhoon-ocr
 RUN python3 -m venv /opt/venv && \
