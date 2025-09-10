@@ -21,6 +21,7 @@ services:
       - TYPHOON_OCR_URL=http://typhoon-ocr:8000
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./pdf:/data/pdf      # 👈 mount โฟลเดอร์ pdf ในเครื่อง ไปที่ /data/pdf ใน container
     depends_on:
       - postgres
       - typhoon-ocr
