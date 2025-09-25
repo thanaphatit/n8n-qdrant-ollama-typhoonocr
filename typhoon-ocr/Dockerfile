@@ -1,26 +1,22 @@
+# Custom n8n image with Python and Typhoon OCR
 FROM n8nio/n8n:latest
 
 USER root
 
-# ติดตั้ง dependencies ด้วย apk (Alpine package manager)
-RUN apk add --no-cache \
-      python3 \
-      py3-pip \
-      poppler-utils \
-      curl \
-      git
+# ติดตั้ง Python และ dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        poppler-utils \
+        curl \
+        git && \
+    rm -rf /var/lib/apt/lists/*
 
-# สร้าง virtual environment และติดตั้ง typhoon-ocr
-RUN python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install typhoon-ocr
+# ให้เรียก python ได้ตรงๆ
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# เพิ่ม virtual environment ลงใน PATH
-ENV PATH="/opt/venv/bin:$PATH"
-
-# สร้างโฟลเดอร์แชร์ข้อมูล
-RUN mkdir -p /data /doc && \
-    chown -R node:node /data /doc
+# ติดตั้ง Typhoon OCR SDK
+RUN pip3 install --no-cache-dir typhoon-ocr
 
 USER node
-WORKDIR /home/node
